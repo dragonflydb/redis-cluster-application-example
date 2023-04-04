@@ -46,28 +46,28 @@ func init() {
 
 func loadData() {
 	fmt.Println("loading sample data into redis.....")
-
+ 
+ 
 	user := map[string]string{}
-	pipe := client.Pipeline()
-
+ 
+ 
 	for i := 0; i < 100; i++ {
 		key := "user:" + strconv.Itoa(i)
 		name := "user-" + strconv.Itoa(i)
 		email := name + "@foo.com"
 		user["name"] = name
 		user["email"] = email
-
-		pipe.HMSet(context.Background(), key, user).Err()
+ 
+ 
+		err := client.HMSet(context.Background(), key, user).Err()
+		if err != nil {
+			log.Fatal("failed to load data", err)
+		}
 	}
-
-	_, err := pipe.Exec(context.Background())
-
-	if err != nil {
-		log.Fatal("failed to load data", err)
-	}
-
+ 
 	fmt.Println("data load complete")
 }
+ 
 
 type User struct {
 	Name  string `redis:"name" json:"name"`
