@@ -3,6 +3,7 @@ services:
   dragonfly:
     image: 'docker.dragonflydb.io/dragonflydb/dragonfly'
     pull_policy: 'always'
+    command: '--cluster_mode=emulated'
     ulimits:
       memlock: -1
     ports:

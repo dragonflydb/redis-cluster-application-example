@@ -22,8 +22,8 @@ func init() {
 		log.Fatal("enter value for REDIS_HOSTS")
 	}
 
-	client = redis.NewUniversalClient(&redis.UniversalOptions{Addrs: strings.Split(hosts, ",")})
-
+	//client = redis.NewUniversalClient(&redis.UniversalOptions{Addrs: strings.Split(hosts, ",")})
+	client = redis.NewClusterClient(&redis.ClusterOptions{Addrs: strings.Split(hosts, ",")})
 	err := client.Ping(context.Background()).Err()
 	if err != nil {
 		log.Fatal("failed to connect", err)
@@ -46,28 +46,24 @@ func init() {
 
 func loadData() {
 	fmt.Println("loading sample data into redis.....")
- 
- 
+
 	user := map[string]string{}
- 
- 
+
 	for i := 0; i < 100; i++ {
 		key := "user:" + strconv.Itoa(i)
 		name := "user-" + strconv.Itoa(i)
 		email := name + "@foo.com"
 		user["name"] = name
 		user["email"] = email
- 
- 
+
 		err := client.HMSet(context.Background(), key, user).Err()
 		if err != nil {
 			log.Fatal("failed to load data", err)
 		}
 	}
- 
+
 	fmt.Println("data load complete")
 }
- 
 
 type User struct {
 	Name  string `redis:"name" json:"name"`
