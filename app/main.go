@@ -22,7 +22,6 @@ func init() {
 		log.Fatal("enter value for REDIS_HOSTS")
 	}
 
-	//client = redis.NewUniversalClient(&redis.UniversalOptions{Addrs: strings.Split(hosts, ",")})
 	client = redis.NewClusterClient(&redis.ClusterOptions{Addrs: strings.Split(hosts, ",")})
 	err := client.Ping(context.Background()).Err()
 	if err != nil {
